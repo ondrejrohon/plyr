@@ -577,6 +577,9 @@ const utils = {
 
         // If a single node is passed, bind the event listener
         events.forEach(type => {
+            if (!utils.elementsWithListeners) utils.elementsWithListeners = []
+            if (toggle) utils.elementsWithListeners.push({ elements, type, callback, options })
+
             elements[toggle ? 'addEventListener' : 'removeEventListener'](type, callback, options);
         });
     },

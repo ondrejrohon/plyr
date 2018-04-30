@@ -1163,6 +1163,10 @@ class Plyr {
                     callback.call(this.elements.original);
                 }
 
+                utils.elementsWithListeners.forEach(({ elements, type, callback, options }) => {
+                    elements.removeEventListener(type, callback, options)
+                })
+
                 // Reset state
                 this.ready = false;
 
