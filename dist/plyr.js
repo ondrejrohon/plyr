@@ -1319,6 +1319,9 @@ var utils = {
 
         // If a single node is passed, bind the event listener
         events.forEach(function (type) {
+            if (!utils.elementsWithListeners) utils.elementsWithListeners = [];
+            if (toggle) utils.elementsWithListeners.push({ elements: elements, type: type, callback: callback, options: options });
+
             elements[toggle ? 'addEventListener' : 'removeEventListener'](type, callback, options);
         });
     },
@@ -7191,8 +7194,8 @@ var Plyr = function () {
                         utils.toggleClass(_this2.elements.controls, _this2.config.classNames.noTransition, false);
                     }
 
-                    // Check if controls toggled
-                    var toggled = utils.toggleClass(_this2.elements.container, _this2.config.classNames.hideControls, true);
+                    // Set hideControls class
+                    var toggled = utils.toggleClass(_this2.elements.container, _this2.config.classNames.hideControls, _this2.config.hideControls);
 
                     // Trigger event and close menu
                     if (toggled) {
@@ -7290,6 +7293,15 @@ var Plyr = function () {
                     if (utils.is.function(callback)) {
                         callback.call(_this3.elements.original);
                     }
+
+                    utils.elementsWithListeners.forEach(function (_ref) {
+                        var elements = _ref.elements,
+                            type = _ref.type,
+                            callback = _ref.callback,
+                            options = _ref.options;
+
+                        elements.removeEventListener(type, callback, options);
+                    });
 
                     // Reset state
                     _this3.ready = false;
